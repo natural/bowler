@@ -5,8 +5,10 @@ from specs.
 
 #### Usage
 
+```clojure
 (require 'natural.bowler)
 (natural.bowler/api-handler {})
+```
 
 #### License
 

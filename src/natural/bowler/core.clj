@@ -1,5 +1,6 @@
 (ns natural.bowler.core
   (:require
+   [clojure.spec.alpha :as s]
    [compojure.api.sweet :as cs]
    
    [spec-tools.core          :refer [create-spec]]
@@ -36,13 +37,21 @@
   (let [[start stop] (map read-string (drop 1 (re-find (re-matcher #"^items=(\d+)\-(\d+)$" a))))]
     {:start start :stop stop}))
 
+(defn partition-qualified-key [a]
+  (-> a :partition :key))
+
+
+(defn partition-key [a]
+  (->> a
+       partition-qualified-key
+       name
+       keyword))
 
 (defn partition-exists? [config context]
   (db/partition-of config (-> context :request :path-params ((partition-key config)))))
 
 
-(defn partition-qualified-key [a]
-  (-> a :partition :key))
+
 
 
 (defn partition-qualified-name [a]
@@ -51,11 +60,7 @@
        (#(str (namespace %) "/" (name %)))))
 
 
-(defn partition-key [a]
-  (->> a
-       partition-qualified-key
-       name
-       keyword))
+
 
 
 
